@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container"> 
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h2 class="text-center bg-info p-2">Add a product</h2>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}  {# Add a hidden tag for CSRF protection #}
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    {{ form.name(class="form-control", placeholder="Product Name") }}
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    {{ form.price(class="form-control", placeholder="Price") }}
+                </div>
+                <div class="form-group">
+                    <label for="discount">Discount (if any)</label>
+                    {{ form.discount(class="form-control", placeholder="Discount (if any)") }}
+                </div>
+                <div class="form-group">
+                    <label for="stock">Available Stock</label>
+                    {{ form.stock(class="form-control", placeholder="Available Stock") }}
+                </div>
+                <div class="form-group">
+                    <label for="brand">Select a brand</label>
+                    <select name="brand" id="brand" class="form-control" required>
+                        <option value="">Select a brand</option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.id }}">{{ brand.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category">Add category</label>
+                    <select name="category" id="category" class="form-control" required>
+                        <option value="">Add category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="colors">Available Colors</label>
+                    {{ form.colors(class="form-control", placeholder="Colors (comma-separated)") }}
+                </div>
+                <div class="form-group">
+                    <label for="description">Product Description</label>
+                    {{ form.description(class="form-control", placeholder="Product Description") }}
+                </div>
+                <button type="submit" class="btn btn-primary">Add Product</button>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endblock %}
