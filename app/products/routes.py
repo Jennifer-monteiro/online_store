@@ -2,6 +2,8 @@ from flask import redirect, render_template, url_for, flash, request
 from app import db, app
 from .models import Brand, Category, Product
 from .forms import AddProductForm
+from werkzeug.utils import secure_filename 
+import os
 
 
 @app.route('/addbrand', methods=['GET', 'POST'])
@@ -46,14 +48,13 @@ def addcategory():
     return render_template('products/addbrand.html')
 
 
-
 @app.route('/addproduct', methods=['GET', 'POST'])
-def add_product():
+def addproduct():
     form = AddProductForm()
     brands = Brand.query.all()
     categories = Category.query.all()
 
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate_on_submit():
         # Retrieve data from the form
         name = form.name.data
         price = form.price.data
@@ -70,16 +71,29 @@ def add_product():
         brand = Brand.query.get(brand_id)
         category = Category.query.get(category_id)
 
-        # Create a new product instance
-        product = Product(name=name, price=price, discount=discount, stock=stock,
-                          colors=colors, description=description, brand=brand, category=category)
+        if brand is not None and category is not None:
+            # Handle image upload
+            if form.image.data:
+                image = form.image.data
+                image_filename = secure_filename(image.filename)
+                image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
 
-        # Add the product to the database
-        db.session.add(product)
-        db.session.commit()
+            # Create a new product instance
+            product = Product(name=name, price=price, discount=discount, stock=stock,
+                              colors=colors, description=description, brand=brand, category=category)
 
-        flash('Product added successfully', 'success')
-        return redirect(url_for('add_product'))
+            if form.image.data:
+                product.image = image_filename  # Set the image filename in the product
+
+            # Add the product to the database
+            db.session.add(product)
+            db.session.commit()
+
+            flash('Product added successfully', 'success')
+            return redirect(url_for('addproduct'))
+        else:
+            flash('Invalid brand or category selected', 'danger')
 
     return render_template('products/addproduct.html', title="Add Product", form=form, brands=brands, categories=categories)
+
 

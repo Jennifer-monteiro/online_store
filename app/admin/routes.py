@@ -3,11 +3,15 @@ from .forms import RegistrationForm, LoginForm
 from app import app,db, bcrypt
 from ..models import User
 from flask_login import login_user, logout_user, current_user, login_required
+from ..products.models import get_latest_products, get_product_by_id, add_product_to_cart
 
 
-@app.route("/")
+
+@app.route('/')
 def home():
-    return render_template('admin/index.html', title ="Admin Page")
+    latest_products = get_latest_products()
+    return render_template('admin/index.html', latest_products=latest_products)
+
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -57,7 +61,7 @@ def admin():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         if form.validate():
             user = User.query.filter_by(username=form.username.data).first()
             if user:
@@ -69,3 +73,15 @@ def login():
                     flash('Wrong Password', 'danger')
     return render_template('admin/login.html', form=form,  title='Login')
 
+
+@app.route('/purchase/<int:product_id>', methods=['GET', 'POST'])
+@login_required  # Requires the user to be logged in
+def purchase_product(product_id):
+    # Get the product by product_id
+    product = get_product_by_id(product_id)
+
+    # Add the product to the user's shopping cart (you need to implement this)
+    add_product_to_cart(product, current_user)
+
+    flash("Product added to your shopping cart!", "success")
+    return redirect(url_for('shopping_cart'))  # Redirect to the shopping cart page

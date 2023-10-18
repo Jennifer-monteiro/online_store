@@ -49,6 +49,12 @@
                     <label for="description">Product Description</label>
                     {{ form.description(class="form-control", placeholder="Product Description") }}
                 </div>
+                {# Add the image input field for the product image #}
+                <div class="form-group">
+                    <label for="image">Product Image</label>
+                    {{ form.image(class="form-control-file") }}
+                </div>
+                
                 <button type="submit" class="btn btn-primary">Add Product</button>
             </form>
         </div>

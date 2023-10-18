@@ -1,5 +1,74 @@
 {% extends 'base.html' %}
-{% block content %}
 
+{% block content %}
+<style>
+    /* Custom CSS for product cards */
+    .product-card {
+        border: 1px solid #ddd;
+        border-radius: 10px; /* Add rounded borders */
+        padding: 10px;
+        text-align: center;
+        margin-bottom: 10px;
+        min-height: 300px;
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Darker shadow for 3D effect */
+        border-color: #f2f2f2; /* Faded border color */
+    }
+
+    .product-card img {
+        max-height: 100px;
+        max-width: 80%;
+    }
+
+    .product-card h3 {
+        font-size: 16px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-height: 1.5em;
+    }
+
+    .btn-success {
+        background-color: #4CAF50; /* Customize the "Buy Now" button color */
+        color: white;
+    }
+</style>
+
+<!-- Header with an image and "Shop Now" button -->
+<header>
+    <div class="jumbotron">
+        <h1>Welcome to Our Store</h1>
+        <p>Your one-stop shop for amazing products.</p>
+        <a href="#" class="btn btn-primary btn-lg">Shop Now</a>
+    </div>
+</header>
+
+<!-- Latest Products Section -->
+<section class="latest-products">
+    <h2>Our Latest Products</h2>
+    <div class="row">
+        {% for product in latest_products[:10] %}
+            {% if loop.index0 % 5 == 0 %}
+            </div>
+            <div class="row">
+            {% endif %}
+            <div class="col-md-2">
+                <div class="product-card">
+                    {% if product[1] %}
+                        <img src="{{ url_for('static', filename='img/products/' + product[1]) }}" alt="{{ product[0] }}" class="img-fluid">
+                    {% else %}
+                        <p>No Image Available</p>
+                    {% endif %}
+                    <h3>{{ product[0] }}</h3>
+                    <p>{{ product[2] }}</p>
+                    <p>${{ '%0.2f'|format(product[3]) }}</p>
+                    <a href="{% if current_user.is_authenticated %}{{ url_for('purchase_product', product_id=product[4]) }}{% else %}{{ url_for('login') }}{% endif %}" class="btn btn-success">
+                        {% if current_user.is_authenticated %}Buy Now{% else %}Sign Up or Log In{% endif %}
+
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 {% include '_messages.html' %}
 {% endblock content %}

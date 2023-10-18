@@ -9,6 +9,7 @@ from .models import db, User
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.static_folder = 'static'
 
 
 # Initialize SQLAlchemy, Bcrypt, Migrate, and LoginManager
@@ -24,6 +25,7 @@ def load_user(id):
 
 
 # Import all routes / models
+
 from app.admin import routes
 from app.products import routes
 from app.products.models import Brand, Category, Product

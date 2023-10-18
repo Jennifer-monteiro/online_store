@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Your Shopping Cart</h1>
+
+    {% if current_user.is_authenticated and current_user.cart %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in current_user.cart.products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>${{ product.price }}</td>
+                <td>
+                    <a href="{{ url_for('remove_from_cart', product_id=product.id) }}" class="btn btn-danger">Remove</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-right">
+        <h4>Total: ${{ current_user.cart.get_cart_total() }}</h4>
+        <a href="{{ url_for('checkout') }}" class="btn btn-primary">Checkout</a>
+    </div>
+    {% else %}
+    <p>Your shopping cart is empty.</p>
+    {% endif %}
+</div>
+{% endblock %}

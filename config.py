@@ -9,7 +9,9 @@ class Config():
 	SECRET_KEY=os.environ.get('SECRET_KEY')
 	SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
-	# Create a directory for this product's images
+	UPLOAD_FOLDER = 'app/static/img/products'
+	ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
 
 
 	
