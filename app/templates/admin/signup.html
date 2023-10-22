@@ -1,22 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class=" text-center">
-    <h1>SIGN UP</h1>
-</div>
-<div class="container">
-    { % include '_messages.html'}
-    {% from "_formhelpers.html" import render_field %}
-        <form method='post' enctype ="multipart/form-data">
-            <div>
-                {{ render_field(form.name, class ="form-control") }}
-                {{ render_field(form.username, class ="form-control") }}
-                {{ render_field(form.email,class ="form-control") }}
-                {{ render_field(form.password, class ="form-control") }}
-                {{ render_field(form.confirm, class ="form-control") }}
-                <input type ="file" name ="photo">
-            </div>
-            <p><input type=submit value="Register" class="btn btn-info mt-2"></p>
-        </form>
-</div>
+    <style>
+        /* Custom CSS for the "Register" button */
+        .btn-custom-register {
+            border-radius: 20px;
+            background-color: rgb(147, 77, 147); /* Purple background color */
+            color: white; /* White text color */
+            border: 2px solid white; /* 20px white border */
+            width: fit-content;
+            padding: 8px 20px;
+        }
+
+        .container-purple-border {
+            border: 2px solid rgb(209, 147, 209); /* Purple border */
+            border-radius: 10px; /* Add rounded corners to the container */
+            padding: 20px; /* Add some padding for spacing */
+        }
+        
+        .container-below {
+            margin-top: 20px; /* Add margin at the top to create spacing below the container */
+        }
+    </style>
+
+    <div class="container container-purple-border mt-5" style="max-width: 400px;">
+        <div class="text-center">
+            <h1 style="color: rgb(147, 77, 147);">SIGN UP</h1>
+        </div>
+        <div class="container">
+            {% include '_messages.html' %}
+            {% from "_formhelpers.html" import render_field %}
+            <form method='post' enctype="multipart/form-data">
+                <div>
+                    {{ render_field(form.name, class="form-control") }}
+                    {{ render_field(form.username, class="form-control") }}
+                    {{ render_field(form.email, class="form-control") }}
+                    {{ render_field(form.password, class="form-control") }}
+                    {{ render_field(form.confirm, class="form-control") }}
+                </div>
+                <p><input type="submit" value="Register" class="btn btn-custom-register mt-2"></p>
+            </form>
+        </div>
+    </div>
+    
+    <div class="container container-below">
+        <!-- Content for the container below the "SIGN UP" form -->
+    </div>
 {% endblock content %}

@@ -48,7 +48,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False, unique=True)
 
-def get_latest_products(limit=5):
+def get_latest_products(limit=10):
     # Query the Product model to get the latest products
     latest_products = db.session.query(
         Product.name,

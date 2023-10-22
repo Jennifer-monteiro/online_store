@@ -9,7 +9,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(45), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(180), nullable=False, unique=False)
-    profile = db.Column(db.String(180), nullable=False, unique=False, default='profile.jpg')
+    
 
     def __init__(self, name, username, email, password):
         self.name = name

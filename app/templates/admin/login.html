@@ -1,29 +1,50 @@
+
 {% extends 'base.html' %}
 {% block title %}Log in{% endblock %}
 
 {% block content %}
-<div class="container col-6 mt-5 p-4" style="background-color: white; border-radius: 15px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); text-align: center;">
-  <h1 class="mb-4">Log in</h1>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-      {{ form.username.label(class='form-label') }}
-      {{ form.username(class='form-control', placeholder="Username") }}
-    </div>
-    <div class="form-group">
-      {{ form.password.label(class='form-label') }}
-      {{ form.password(class='form-control', placeholder="Password") }}
-    </div>
+<style>
+   /* Custom CSS for the "Register" button */
+   .btn-custom-register {
+    border-radius: 20px;
+    background-color: rgb(147, 77, 147); /* Purple background color */
+    color: white; /* White text color */
+    border: 2px solid white; /* 20px white border */
+    width: fit-content;
+    padding: 8px 20px;
+} 
 
-    <div class="d-grid gap-2 my-3">
-      {{ form.submit(class='btn btn-primary btn-block') }}
-    </div>
-    { % include '_messages.html'}
-    {% if error_message %}
-    <div class="alert alert-danger mt-3">
-      {{ error_message }}
-    </div>
-    {% endif %}
-  </form>
+.container-purple-border {
+    border: 2px solid rgb(209, 147, 209); /* Purple border */
+    border-radius: 10px; /* Add rounded corners to the container */
+    padding: 20px; /* Add some padding for spacing */
+}
+</style>
+
+<div class="container container-purple-border" style="max-width: 400px; border: 2px solid rgb(209, 147, 209); border-radius: 10px; padding: 30px; margin-top: 100px; margin-bottom: 260px;">
+  <div class="d-flex flex-column align-items-center">
+    <h1 class="mb-4" style="color: rgb(147, 77, 147);">LOG IN</h1>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.username.label(class='form-label') }}
+        {{ form.username(class='form-control', placeholder="Username") }}
+      </div>
+      <div class="form-group">
+        {{ form.password.label(class='form-label') }}
+        {{ form.password(class='form-control', placeholder="Password") }}
+      </div>
+
+      <div class="d-grid gap-2 my-3">
+        {{ form.submit(class='btn btn-custom-register') }}
+      </div>
+      {% include '_messages.html' %}
+      {% if error_message %}
+      <div class="alert alert-danger mt-3">
+        {{ error_message }}
+      </div>
+      {% endif %}
+    </form>
+  </div>
 </div>
 {% endblock %}

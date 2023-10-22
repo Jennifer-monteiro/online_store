@@ -74,14 +74,24 @@ def login():
     return render_template('admin/login.html', form=form,  title='Login')
 
 
-@app.route('/purchase/<int:product_id>', methods=['GET', 'POST'])
+@app.route('/purchase/<string:product_id>', methods=['GET', 'POST'])
 @login_required  # Requires the user to be logged in
 def purchase_product(product_id):
+    try:
+        product_id = int(product_id)  # Convert the product_id to an integer
+    except ValueError:
+        flash("Invalid product ID", "danger")
+        return redirect(url_for('home'))
+    
     # Get the product by product_id
     product = get_product_by_id(product_id)
 
-    # Add the product to the user's shopping cart (you need to implement this)
-    add_product_to_cart(product, current_user)
+    if product:
+        # Add the product to the user's shopping cart (you need to implement this)
+        add_product_to_cart(product, current_user)
 
-    flash("Product added to your shopping cart!", "success")
-    return redirect(url_for('shopping_cart'))  # Redirect to the shopping cart page
+        flash("Product added to your shopping cart!", "success")
+        return redirect(url_for('shopping_cart'))  # Redirect to the shopping cart page
+    else:
+        flash("Product not found.", "danger")
+        return redirect(url_for('home'))

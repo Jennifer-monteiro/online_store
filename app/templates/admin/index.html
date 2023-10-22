@@ -10,7 +10,7 @@
         text-align: center;
         margin-bottom: 10px;
         min-height: 300px;
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Darker shadow for 3D effect */
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4); /* Darker shadow for 3D effect */
         border-color: #f2f2f2; /* Faded border color */
     }
 
@@ -30,27 +30,90 @@
     .btn-success {
         background-color: #4CAF50; /* Customize the "Buy Now" button color */
         color: white;
+        padding: 5px 10px; /* Adjust button size */
+    }
+
+    /* Center the card container */
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Header with overlay text */
+    .header-container {
+        position: relative;
+        width: 100%;
+        height: 400px; /* Adjust the header height as needed */
+    }
+
+    .carousel {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .carousel-inner {
+        height: 100%;
+    }
+
+    .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .carousel-caption {
+        position: absolute;
+        top: 50%;
+        left: 20px; /* Adjust the left position as needed */
+        transform: translateY(-85%);
+        color: white;
+        text-align: left; /* Align the text to the left side */
+        z-index: 2;
+    }
+
+    .carousel-item img {
+        margin-top: -190px; /* Adjust the margin value as needed */
+    }
+    .btn-custom {
+        background-color: white; /* Initial background color */
+        color: rgb(147, 77, 147);
+        border: 2px solid rgb(147, 77, 147);
+        border-radius: 20px;
+        transition: background-color 0.3s; /* Add a smooth transition effect */
+    }
+
+    .btn-custom:hover {
+        background-color: #d789d7; 
+        border: 2px solid white; 
+    }
+    .price-text {
+        color: purple; /* Corrected typo "PURPLE" to "purple" */
     }
 </style>
 
-<!-- Header with an image and "Shop Now" button -->
-<header>
-    <div class="jumbotron">
-        <h1>Welcome to Our Store</h1>
-        <p>Your one-stop shop for amazing products.</p>
-        <a href="#" class="btn btn-primary btn-lg">Shop Now</a>
+<!-- Header with a carousel and overlay text -->
+<header class="header-container">
+    <div id="headerCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{{ url_for('static', filename='img/image1.jpeg') }}" alt="Image 1">
+                <div class="carousel-caption">
+                    <h1>Welcome to Our Store</h1>
+                    <p>Your one-stop shop for amazing products.</p>
+                    <a href="#" class="btn btn-primary btn-lg" style="background-color: white; color: purple; border: 2px solid white; border-radius: 50px;">Shop Now</a>
+                </div>
+            </div>  
+        </div>
     </div>
 </header>
 
 <!-- Latest Products Section -->
-<section class="latest-products">
+<section class="latest-products mx-auto text-center mt-4">
     <h2>Our Latest Products</h2>
-    <div class="row">
+    <div class="card-container mt-4">
         {% for product in latest_products[:10] %}
-            {% if loop.index0 % 5 == 0 %}
-            </div>
-            <div class="row">
-            {% endif %}
             <div class="col-md-2">
                 <div class="product-card">
                     {% if product[1] %}
@@ -60,15 +123,15 @@
                     {% endif %}
                     <h3>{{ product[0] }}</h3>
                     <p>{{ product[2] }}</p>
-                    <p>${{ '%0.2f'|format(product[3]) }}</p>
-                    <a href="{% if current_user.is_authenticated %}{{ url_for('purchase_product', product_id=product[4]) }}{% else %}{{ url_for('login') }}{% endif %}" class="btn btn-success">
-                        {% if current_user.is_authenticated %}Buy Now{% else %}Sign Up or Log In{% endif %}
-
-                    </a>
+                    <p class="price-text">${{ '%0.2f'|format(product[3]) }}</p>
+                    <a href="{{ url_for('login') }}" class="btn btn-success btn-custom">
+                        Sign Up or Log In to add to cart
+                    </a>                  
                 </div>
             </div>
         {% endfor %}
     </div>
 </section>
+
 {% include '_messages.html' %}
 {% endblock content %}
