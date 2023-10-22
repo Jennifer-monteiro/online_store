@@ -58,8 +58,11 @@ def get_latest_products(limit=10):
     ).join(Brand).order_by(Product.date_added.desc()).limit(limit).all()
     return latest_products
 
+
+
 def get_product_by_id(product_id):
     product = Product.query.get(product_id)
+    print(product)  # Add this line for debugging
     return product
 
 def add_product_to_cart(user_id, product_id):
@@ -74,4 +77,3 @@ class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     products = db.relationship('Product', secondary=cart_product_association, back_populates='carts')
-

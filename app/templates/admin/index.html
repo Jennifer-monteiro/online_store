@@ -124,9 +124,16 @@
                     <h3>{{ product[0] }}</h3>
                     <p>{{ product[2] }}</p>
                     <p class="price-text">${{ '%0.2f'|format(product[3]) }}</p>
-                    <a href="{{ url_for('login') }}" class="btn btn-success btn-custom">
-                        Sign Up or Log In to add to cart
-                    </a>                  
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('shopping_cart') }}" class="btn btn-success btn-custom">
+                            Buy Now
+                        </a>
+                    
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-success btn-custom">
+                            Sign Up or Log In to add to cart
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

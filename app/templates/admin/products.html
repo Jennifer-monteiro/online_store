@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Custom purple color styles */
+        .list-group-item {
+            background-color: #b39ddb; /* Purple list group item background */
+        }
+        .table {
+            background-color: #d1c4e9; /* Purple table background */
+        }
+        .table th {
+            background-color: #9575cd; /* Darker purple for table header */
+            color: #fff; /* White text on the table header */
+        }
+        .btn-primary {
+            background-color: #673ab7; /* Purple button background */
+            border-color: #673ab7; /* Purple border */
+        }
+        .btn-primary:hover {
+            background-color: #5e35b1; /* Darker purple on hover */
+            border-color: #5e35b1;
+        }
+        /* Set a fixed height for product cards */
+        .product-card {
+            height: 100%;
+        }
+        /* Center the product list */
+        .centered-products {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh; /* Adjust the minimum height as needed */
+        }
+    </style>
+</head>
+<body>
+</body>
+<div class="container">
+    <div class="centered-products">
+        <div class="row">
+            <div class="col-md-9">
+                <h1>All Products</h1>
+                <div class="row">
+                    {% for product in products %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card product-card">
+                                {% if product.image %}
+                                    <img src="{{ url_for('static', filename='img/products/' + product.image) }}" alt="{{ product.name }}" class="card-img-top">
+                                {% else %}
+                                    <p class="card-img-top text-center">No Image Available</p>
+                                {% endif %}
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <p class="card-text">Brand: {{ product.brand.name }}</p>
+                                    <p class="card-text">Price: ${{ product.price }}</p>
+                                    {% if current_user.is_authenticated %}
+                                        <button class="btn btn-primary" data-product-id="{{ product.id }}">
+                                            <i class="fas fa-cart-plus"></i> Add to Cart
+                                        </button>
+                                    {% else %}
+                                        <p>Login or Sign Up to add to cart</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>
+{% endblock content %}
+

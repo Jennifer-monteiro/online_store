@@ -2,8 +2,8 @@ from flask import render_template, request, flash, redirect, url_for,session
 from .forms import RegistrationForm, LoginForm
 from app import app,db, bcrypt
 from ..models import User
-from flask_login import login_user, logout_user, current_user, login_required
-from ..products.models import get_latest_products, get_product_by_id, add_product_to_cart
+from flask_login import login_user, logout_user, current_user, login_required, LoginManager
+from ..products.models import get_latest_products, get_product_by_id, add_product_to_cart, Product, Category, Cart
 
 
 
@@ -47,7 +47,7 @@ def signup():
 
     return render_template('admin/signup.html', form=form, title="Sign up page")
 
-from flask import render_template
+
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -58,40 +58,37 @@ def admin():
 
 
 
-@app.route("/login", methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
     if request.method == 'POST':
         if form.validate():
             user = User.query.filter_by(username=form.username.data).first()
-            if user:
-                if user and bcrypt.check_password_hash(user.password, form.password.data):
-                    session['username'] = form.username.data
-                    flash(f'Welcome {form.username.data} You are loggedin')
-                    return redirect(request.args.get('next') or url_for('admin'))
-                else:
-                    flash('Wrong Password', 'danger')
-    return render_template('admin/login.html', form=form,  title='Login')
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user)  # Log in the user
+                flash(f'Welcome {form.username.data}! You are logged in', 'success')
+                return redirect(request.args.get('next') or url_for('home'))
+            else:
+                flash('Login failed. Please check your credentials.', 'danger')
+
+    return render_template('admin/login.html', form=form, title='Login')
 
 
-@app.route('/purchase/<string:product_id>', methods=['GET', 'POST'])
-@login_required  # Requires the user to be logged in
-def purchase_product(product_id):
-    try:
-        product_id = int(product_id)  # Convert the product_id to an integer
-    except ValueError:
-        flash("Invalid product ID", "danger")
-        return redirect(url_for('home'))
-    
-    # Get the product by product_id
-    product = get_product_by_id(product_id)
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()  # Log out the user
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('home'))
 
-    if product:
-        # Add the product to the user's shopping cart (you need to implement this)
-        add_product_to_cart(product, current_user)
+@app.route('/products')
+@login_required
+def product_page():
+    categories = Category.query.all()
+    products = Product.query.all()
+    return render_template('admin/products.html', categories=categories, products=products)
 
-        flash("Product added to your shopping cart!", "success")
-        return redirect(url_for('shopping_cart'))  # Redirect to the shopping cart page
-    else:
-        flash("Product not found.", "danger")
-        return redirect(url_for('home'))
+@app.route('/shopping_cart')
+@login_required
+def shopping_cart():
+    return render_template('admin/shopping_cart.html')
